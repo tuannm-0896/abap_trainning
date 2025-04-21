@@ -19,87 +19,81 @@ CLASS zcl_01_hello_world_nmt IMPLEMENTATION.
 
 * Declarations
 **********************************************************************
-    DATA result TYPE i.
 
+    " Internal tables
     DATA numbers TYPE TABLE OF i.
 
-* Preparation
+    "Table type (local)
+    TYPES tt_strings TYPE TABLE OF string.
+    DATA texts1      TYPE tt_strings.
+
+    " Table type (global)
+    DATA texts2 TYPE string_table.
+
+    " work areas
+    DATA number TYPE i VALUE 1234.
+    DATA text TYPE string.
+
+* Example 1: APPEND
 **********************************************************************
 
-    APPEND 123 TO numbers.
+    APPEND 4711       TO numbers.
+    APPEND number     TO numbers.
+    APPEND 2 * number TO numbers.
 
-* Example 1: Conversion Error (no Number)
+    out->write(  `-----------------` ).
+    out->write(  `Example 1: APPEND` ).
+    out->write(  `-----------------` ).
+
+    out->write( numbers ).
+
+* Example 2: CLEAR
 **********************************************************************
 
-    CONSTANTS c_text TYPE string VALUE 'ABC'.
-*    CONSTANTS c_text TYPE string VALUE '123'.
+    CLEAR numbers.
+
+    out->write(  `----------------` ).
+    out->write(  `Example 2: CLEAR` ).
+    out->write(  `----------------` ).
+
+    out->write( numbers ).
+
+* Example 3: table expression
+**********************************************************************
+    APPEND 4711       TO numbers.
+    APPEND number     TO numbers.
+    APPEND 2 * number TO numbers.
 
     out->write(  `---------------------------` ).
-    out->write(  `Example 1: Conversion Error` ).
+    out->write(  `Example 3: Table Expression` ).
     out->write(  `---------------------------` ).
 
-    TRY.
-        result = c_text.
-        out->write( |Converted content is { result }|  ).
-      CATCH cx_sy_conversion_no_number.
-        out->write( |Error: { c_text } is not a number!| ).
-    ENDTRY.
+    number = numbers[ 2 ] .
 
-* Example 2: Division by Zero
+    out->write( |Content of row 2: { number }|    ).
+    "Direct use of expression in string template
+    out->write( |Content of row 1: { numbers[ 1 ]  }| ).
+
+* Example 4: LOOP ... ENDLOOP
 **********************************************************************
-
-    CONSTANTS c_number TYPE i VALUE 0.
-*    CONSTANTS c_number TYPE i VALUE 7.
-
     out->write(  `---------------------------` ).
-    out->write(  `Example 2: Division by Zero` ).
+    out->write(  `Example 4: LOOP ... ENDLOOP` ).
     out->write(  `---------------------------` ).
 
-    TRY.
-        result = 100 / c_number.
-        out->write( |100 divided by { c_number } equals { result }| ).
-      CATCH cx_sy_zerodivide.
-        out->write(  `Error: Division by zero is not defined!` ).
-    ENDTRY.
+    LOOP AT numbers INTO number.
 
-* Example 3: Itab Error (Line Not Found)
+      out->write( |Row: { sy-tabix } Content { number }| ).
+
+    ENDLOOP.
+
+* Example 5: Inline declaration in LOOP ... ENDLOOP
 **********************************************************************
+    out->write(  `-----------------------------` ).
+    out->write(  `Example 5: Inline Declaration` ).
+    out->write(  `-----------------------------` ).
 
-    CONSTANTS c_index TYPE i VALUE 2.
-*    CONSTANTS c_index TYPE i VALUE 1.
-
-    out->write(  `-------------------------` ).
-    out->write(  `Example 3: Line Not Found` ).
-    out->write(  `-------------------------` ).
-
-    TRY.
-        result = numbers[ c_index ].
-        out->write( |Content of row { c_index } equals { result }| ).
-      CATCH cx_sy_itab_line_not_found.
-        out->write(  |Error: Itab has less than { c_index } rows!| ).
-    ENDTRY.
-
-
-* Example 4: Combination of Different Exceptions
-**********************************************************************
-*    CONSTANTS c_char TYPE c LENGTH 1 VALUE 'X'.
-*    CONSTANTS c_char TYPE c length 1 value '0'.
-    CONSTANTS c_char TYPE c LENGTH 1 VALUE '1'.
-*    CONSTANTS c_char TYPE c length 1 value '2'.
-
-    out->write(  `----------------------` ).
-    out->write(  `Example 4: Combination` ).
-    out->write(  `----------------------` ).
-
-    TRY.
-        result = numbers[ 2 / c_char ].
-        out->write( |Result: { result } | ).
-      CATCH cx_sy_zerodivide.
-        out->write( `Error: Division by zero is not defined`  ).
-      CATCH cx_sy_conversion_no_number.
-        out->write( |Error: { c_char } is not a number! | ).
-      CATCH cx_sy_itab_line_not_found.
-        out->write( |Error: Itab contains less than { 2 / c_char } rows| ).
-    ENDTRY.
+    LOOP AT numbers INTO DATA(number_inline).
+      out->write( |Row: { sy-tabix } Content { number_inline }| ).
+    ENDLOOP.
   ENDMETHOD.
 ENDCLASS.

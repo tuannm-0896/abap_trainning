@@ -14,76 +14,17 @@ ENDCLASS.
 
 CLASS zcl_local_class_nmt IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
+    DATA connection  TYPE REF TO lcl_connection.
 
-* Example 1 : Motivation for Structured Variables
-**********************************************************************
+    try.
+         connection = NEW #(
+                         i_carrier_id    = 'LH'
+                         i_connection_id = '0400'
+                       ).
+       CATCH cx_abap_invalid_value.
+          out->write( `Method call failed` ).
+     endtry.
 
-    DATA connection_full TYPE /DMO/I_Connection.
-
-    SELECT SINGLE
-     FROM /dmo/I_Connection
-   FIELDS AirlineID, ConnectionID, DepartureAirport, DestinationAirport,
-          DepartureTime, ArrivalTime, Distance, DistanceUnit
-    WHERE AirlineId    = 'LH'
-      AND ConnectionId = '0400'
-     INTO @connection_full.
-
-    out->write(  `--------------------------------------` ).
-    out->write(  `Example 1: CDS View as Structured Type` ).
-    out->write( connection_full ).
-
-* Example 2: Global Structured Type
-**********************************************************************
-
-    DATA message TYPE symsg.
-
-    out->write(  `---------------------------------` ).
-    out->write(  `Example 2: Global Structured Type` ).
-    out->write( message ).
-
-* Example 3 : Local Structured Type
-**********************************************************************
-
-    TYPES: BEGIN OF st_connection,
-             airport_from_id TYPE /dmo/airport_from_id,
-             airport_to_id   TYPE /dmo/airport_to_id,
-             carrier_name    TYPE /dmo/carrier_name,
-           END OF st_connection.
-
-    DATA connection TYPE st_connection.
-
-    SELECT SINGLE
-      FROM /DMO/I_Connection
-    FIELDS DepartureAirport, DestinationAirport, \_Airline-Name
-     WHERE AirlineID = 'LH'
-       AND ConnectionID = '0400'
-      INTO @connection.
-
-    out->write(  `---------------------------------------` ).
-    out->write(  `Example 3: Local Structured Type` ).
-    out->write( connection ).
-
-* Example 4 : Nested Structured Type
-**********************************************************************
-
-    TYPES: BEGIN OF st_nested,
-             airport_from_id TYPE /dmo/airport_from_id,
-             airport_to_id   TYPE /dmo/airport_to_id,
-             message         TYPE symsg,
-             carrier_name    TYPE /dmo/carrier_name,
-           END OF st_nested.
-
-    DATA connection_nested TYPE st_nested.
-
-    SELECT SINGLE
-      FROM /dmo/I_Connection
-      FIELDS DepartureAirport, DestinationAirport, \_Airline-Name
-      WHERE AirlineId    = 'LH'
-        AND ConnectionId = '0400'
-      INTO @connection_nested.
-
-    out->write(  `---------------------------------` ).
-    out->write(  `Example 4: Nested Structured Type` ).
-    out->write( connection_nested ).
+     out->write( connection->get_output( ) ).
   ENDMETHOD.
 ENDCLASS.

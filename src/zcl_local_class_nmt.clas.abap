@@ -22,59 +22,142 @@ CLASS zcl_local_class_nmt IMPLEMENTATION.
              carrier_name    TYPE /dmo/carrier_name,
            END OF st_connection.
 
+    TYPES tt_connections TYPE SORTED TABLE OF   st_connection
+                              WITH NON-UNIQUE KEY carrier_id
+                                                  connection_id.
 
-* Example 1 : Simple and Complex Internal Table
+    DATA connections TYPE tt_connections.
+    DATA connection  LIKE LINE OF connections.
+
+    TYPES: BEGIN OF st_carrier,
+             carrier_id    TYPE /dmo/carrier_id,
+             currency_code TYPE /dmo/currency_code,
+           END OF st_carrier.
+
+    DATA carriers TYPE STANDARD TABLE OF st_carrier
+                       WITH NON-UNIQUE KEY carrier_id.
+
+    DATA carrier LIKE LINE OF carriers.
+
+* Preparation: Fill internal tables with data
 **********************************************************************
+    connections = VALUE #(  ( carrier_id      = 'JL'
+                              connection_id   = '0408'
+                              airport_from_id = 'FRA'
+                              airport_to_id   = 'NRT'
+                              carrier_name    = 'Japan Airlines'
+                            )
+                            ( carrier_id      = 'AA'
+                              connection_id   = '0017'
+                              airport_from_id = 'MIA'
+                              airport_to_id   = 'HAV'
+                              carrier_name    = 'American Airlines'
+                            )
+                            ( carrier_id      = 'SQ'
+                              connection_id   = '0001'
+                              airport_from_id = 'SFO'
+                              airport_to_id   = 'SIN'
+                              carrier_name    = 'Singapore Airlines'
+                            )
+                            ( carrier_id      = 'UA'
+                              connection_id   = '0078'
+                              airport_from_id = 'SFO'
+                              airport_to_id   = 'SIN'
+                              carrier_name    = 'United Airlines'
+                            )
+                           ).
 
-    " simple table (scalar row type)
-    DATA numbers TYPE TABLE OF i.
-    " complex table (structured row type)
-    DATA connections TYPE TABLE OF st_connection.
+    carriers = VALUE #(  (  carrier_id    = 'SQ'
+                            currency_code = ' '
+                         )
+                         (  carrier_id    = 'JL'
+                            currency_code = ' '
+                         )
+                         (  carrier_id    = 'AA'
+                            currency_code = ' '
+                         )
+                         (  carrier_id    = 'UA'
+                            currency_code = ' '
+                         )
+                      ).
 
+* Example 1: Table Expression with Key Access
+**********************************************************************
     out->write(  `--------------------------------------------` ).
-    out->write(  `Example 1: Simple and Complex Internal Table` ).
-    out->write( data = numbers
-                name = `Simple Table NUMBERS:` ).
-    out->write( data = connections
-                name = `Complex Table CONNECTIONS:` ).
+    out->write(  `Example 1: Table Expressions with Key Access` ).
 
-* Example 2 : Complex Internal Tables
+    out->write(  data = connections
+                 name = `Internal Table CONNECTIONS: ` ).
+
+    " with key fields
+    connection = connections[ carrier_id    = 'SQ'
+                              connection_id = '0001' ].
+
+    out->write(  data = connection
+                 name = `CARRIER_ID = 'SQ' AND CONNECTION_ID = '001':` ).
+
+    " with non-key fields
+    connection = connections[ airport_from_id = 'SFO'
+                              airport_to_id   = 'SIN' ].
+    out->write(  data = connection
+                 name = `AIRPORT_FROM_ID = 'SFO' AND AIRPORT_TO_ID = 'SIN':` ).
+
+* Example 2: LOOP with key access
 **********************************************************************
 
-    " standard table with non-unique standard key (short form)
-    DATA connections_1 TYPE TABLE OF st_connection.
+    out->write(  `-------------------------------` ).
+    out->write(  `Example 2: LOOP with Key Access` ).
 
-    " standard table with non-unique standard key (explicit form)
-    DATA connections_2 TYPE STANDARD TABLE OF st_connection
-                            WITH NON-UNIQUE DEFAULT KEY.
+    LOOP AT connections INTO connection
+                       WHERE airport_from_id <> 'MIA'.
 
-    " sorted table with non-unique explicit key
-    DATA connections_3  TYPE SORTED TABLE OF st_connection
-                             WITH NON-UNIQUE KEY airport_from_id
-                                                 airport_to_id.
+      "do something with the content of connection
+      out->write( data = connection
+                  name = |This is row number { sy-tabix }: | ).
 
-    " sorted hashed with unique explicit key
-    DATA connections_4  TYPE HASHED TABLE OF st_connection
-                             WITH UNIQUE KEY carrier_id
-                                             connection_id.
+    ENDLOOP.
 
-* Example 3 : Local Table Type
+* Example 3: MODIFY TABLE (key access)
 **********************************************************************
+    out->write(  `-----------------------------------` ).
+    out->write(  `Example 3: MODIFY TABLE (key access` ).
 
-    TYPES tt_connections TYPE SORTED TABLE OF st_connection
-                              WITH UNIQUE KEY carrier_id
-                                              connection_id.
+    out->write(  data = carriers
+                 name = `Table CARRRIERS before MODIFY TABLE:` ).
 
-    DATA connections_5 TYPE tt_connections.
+    carrier = carriers[  carrier_id = 'JL' ].
+    carrier-currency_code = 'JPY'.
+    MODIFY TABLE carriers FROM carrier.
 
-* Example 4 : Global Table Type
+    out->write(  data = carriers
+                 name = `Table CARRRIERS after MODIFY TABLE:` ).
+
+* Example 4: MODIFY (index access)
 **********************************************************************
+    out->write(  `--------------------------------` ).
+    out->write(  `Example 4: MODIFY (index access)` ).
 
-    DATA flights  TYPE /dmo/t_flight.
+    carrier-carrier_id    = 'LH'.
+    carrier-currency_code = 'EUR'.
+    MODIFY carriers FROM carrier INDEX 1.
 
-    out->write(  `------------------------------------------` ).
-    out->write(  `Example 4: Global Table TYpe /DMO/T_FLIGHT` ).
-    out->write(  data = flights
-                 name = `Internal Table FLIGHTS:` ).
+    out->write(  data = carriers
+                 name = `Table CARRRIERS after MODIFY:` ).
+
+* Example 5: MODIFY in a LOOP
+**********************************************************************
+    out->write(  `----------------------------` ).
+    out->write(  `Example 5: MODIFY  in a LOOP` ).
+
+    LOOP AT carriers INTO carrier
+                    WHERE currency_code IS INITIAL.
+
+      carrier-currency_code = 'USD'.
+      MODIFY carriers FROM carrier.
+
+    ENDLOOP.
+
+    out->write(  data = carriers
+                 name = `Table CARRRIERS after the LOOP:` ).
   ENDMETHOD.
 ENDCLASS.

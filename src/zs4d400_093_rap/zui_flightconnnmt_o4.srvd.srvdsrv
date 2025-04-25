@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_01ACONN_NMT'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_01ACONN_NMT'
+  }
+}
+define service ZUI_FLIGHTCONNNMT_O4 provider contracts odata_v4_ui {
+  expose ZC_01ACONN_NMT as Flight_NMT;
+}

@@ -2,7 +2,7 @@
 @Metadata.allowExtensions: true
 @EndUserText.label: '###GENERATED Core Data Service Entity'
 define root view entity ZR_01ACONN_NMT
-  as select from Z01ACONN_NMT as Flight_NMT
+  as select from z01aconn_nmt as Flight_NMT
 {
   key uuid as Uuid,
   carrid as Carrid,
@@ -13,6 +13,13 @@ define root view entity ZR_01ACONN_NMT
   airport_to as AirportTo,
   city_to as CityTo,
   country_to as CountryTo,
+  @Consumption.valueHelpDefinition: [
+    { 
+      entity.name:    'I_CurrencyStdVH', 
+      entity.element: 'Currency' 
+    }
+  ]
+  currency_code as CurrencyCode,
   @Semantics.user.createdBy: true
   local_created_by as LocalCreatedBy,
   @Semantics.systemDateTime.createdAt: true

@@ -21,7 +21,7 @@ CLASS zcl_nmt_eml IMPLEMENTATION.
       DATA agencies_upd TYPE TABLE FOR CREATE ZR_01ACONN_NMT.
       out->write( `agencies_upd prepared` ).  " Thêm log
 
-      agencies_upd = VALUE #( ( %cid = 'CONN_001' carrid = 'LH' Connid = '12' AirportFrom = 'JFK' AirportTo = 'FRA' ) ).
+      agencies_upd = VALUE #( ( %cid = 'CONN_001' carrid = 'AA' Connid = '11' AirportFrom = 'JFK' AirportTo = 'FRA' ) ).
       out->write( `Data assigned to agencies_upd` ).  " Thêm log
 
       MODIFY ENTITIES OF ZR_01ACONN_NMT

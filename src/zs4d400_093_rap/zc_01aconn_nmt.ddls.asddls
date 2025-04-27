@@ -2,7 +2,7 @@
 @EndUserText.label: '###GENERATED Core Data Service Entity'
 @AccessControl.authorizationCheck: #CHECK
 define root view entity ZC_01ACONN_NMT
-  provider contract TRANSACTIONAL_QUERY
+  provider contract transactional_query
   as projection on ZR_01ACONN_NMT
 {
   key Uuid,
@@ -14,6 +14,7 @@ define root view entity ZC_01ACONN_NMT
   AirportTo,
   CityTo,
   CountryTo,
+  CurrencyCode,
   LocalCreatedBy,
   LocalCreatedAt,
   LocalLastChangedBy,

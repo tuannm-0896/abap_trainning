@@ -15,7 +15,10 @@ authorization master( global )
    LocalCreatedAt,
    LocalLastChangedBy,
    LocalLastChangedAt,
+   CountryFrom,
+   CountryTo,
    LastChangedAt;
+
 
   field ( numbering : managed )
    Uuid;
@@ -46,6 +49,7 @@ authorization master( global )
     AirportTo = airport_to;
     CityTo = city_to;
     CountryTo = country_to;
+    CurrencyCode = currency_code;
     LocalCreatedBy = local_created_by;
     LocalCreatedAt = local_created_at;
     LocalLastChangedBy = local_last_changed_by;

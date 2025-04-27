@@ -21,9 +21,6 @@ annotate view ZC_01ACONN_NMT with
     position: 10 , 
     label: 'Uuid'
   } ]
-  @UI.selectionField: [ {
-    position: 10 
-  } ]
   Uuid;
   
   @UI.identification: [ {
@@ -54,18 +51,12 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 40 
   } ]
-  @UI.selectionField: [ {
-    position: 40 
-  } ]
   AirportFrom;
   
   @UI.identification: [ {
     position: 50 
   } ]
   @UI.lineItem: [ {
-    position: 50 
-  } ]
-  @UI.selectionField: [ {
     position: 50 
   } ]
   CityFrom;
@@ -76,9 +67,6 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 60 
   } ]
-  @UI.selectionField: [ {
-    position: 60 
-  } ]
   CountryFrom;
   
   @UI.identification: [ {
@@ -87,18 +75,12 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 70 
   } ]
-  @UI.selectionField: [ {
-    position: 70 
-  } ]
   AirportTo;
   
   @UI.identification: [ {
-    position: 80 
+    position: 80
   } ]
   @UI.lineItem: [ {
-    position: 80 
-  } ]
-  @UI.selectionField: [ {
     position: 80 
   } ]
   CityTo;
@@ -109,9 +91,6 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 90 
   } ]
-  @UI.selectionField: [ {
-    position: 90 
-  } ]
   CountryTo;
   
   @UI.identification: [ {
@@ -120,9 +99,7 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 100 
   } ]
-  @UI.selectionField: [ {
-    position: 100 
-  } ]
+  @UI.hidden: true
   LocalCreatedBy;
   
   @UI.identification: [ {
@@ -131,9 +108,7 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 110 
   } ]
-  @UI.selectionField: [ {
-    position: 110 
-  } ]
+  @UI.hidden: true
   LocalCreatedAt;
   
   @UI.identification: [ {
@@ -142,9 +117,7 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 120 
   } ]
-  @UI.selectionField: [ {
-    position: 120 
-  } ]
+  @UI.hidden: true
   LocalLastChangedBy;
   
   @UI.identification: [ {
@@ -153,9 +126,7 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 130 
   } ]
-  @UI.selectionField: [ {
-    position: 130 
-  } ]
+  @UI.hidden: true
   LocalLastChangedAt;
   
   @UI.identification: [ {
@@ -164,8 +135,9 @@ annotate view ZC_01ACONN_NMT with
   @UI.lineItem: [ {
     position: 140 
   } ]
-  @UI.selectionField: [ {
-    position: 140 
-  } ]
+  @UI.hidden: true
   LastChangedAt;
+  
+  @UI.identification: [ { position: 150 } ]  // Thêm vào object page
+  CurrencyCode;
 }

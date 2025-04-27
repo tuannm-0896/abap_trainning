@@ -16,17 +16,27 @@ CLASS zcl_nmt_eml IMPLEMENTATION.
 
 
   METHOD if_oo_adt_classrun~main.
-    DATA agencies_upd TYPE TABLE FOR UPDATE /dmo/i_agencytp.
+      out->write( `Starting execution...` ).  " Thêm log để kiểm tra
 
-    agencies_upd = VALUE #( ( agencyid = '070042' name = 'tuannm' ) ).
+      DATA agencies_upd TYPE TABLE FOR CREATE ZR_01ACONN_NMT.
+      out->write( `agencies_upd prepared` ).  " Thêm log
 
-    MODIFY ENTITIES OF /dmo/i_agencytp
-      ENTITY /dmo/agency
-      UPDATE FIELDS ( name )
-        WITH agencies_upd.
+      agencies_upd = VALUE #( ( %cid = 'CONN_001' carrid = 'LH' Connid = '12' AirportFrom = 'JFK' AirportTo = 'FRA' ) ).
+      out->write( `Data assigned to agencies_upd` ).  " Thêm log
 
-    COMMIT ENTITIES.
+      MODIFY ENTITIES OF ZR_01ACONN_NMT
+        ENTITY Flight_NMT
+        CREATE
+          FIELDS ( carrid connid airportfrom airportto )
+          WITH agencies_upd
+        MAPPED DATA(mapped)
+        FAILED DATA(failed)
+        REPORTED DATA(reported).
 
-    out->write( `Method execution finished!`  ).
+      out->write( `MODIFY ENTITIES executed` ).  " Thêm log
+
+      COMMIT ENTITIES.
+
+      out->write( `Method execution finished!` ).
   ENDMETHOD.
 ENDCLASS.

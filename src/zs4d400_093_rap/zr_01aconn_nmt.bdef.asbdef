@@ -25,11 +25,15 @@ authorization master( global )
   update;
   delete;
 
+  validation validateCarrid on save { create; field Carrid; }
+
   draft action Activate optimized;
   draft action Discard;
   draft action Edit;
   draft action Resume;
-  draft determine action Prepare;
+  draft determine action Prepare {
+    validation ( always ) validateCarrid;
+  }
 
   mapping for Z01ACONN_NMT
   {

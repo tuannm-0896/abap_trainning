@@ -55,7 +55,7 @@ CLASS lcl_connection IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_output.
-    APPEND |--------------------------------|                    TO r_output.
+    APPEND '--------------------------------' TO r_output.
     APPEND |Carrier:     { carrier_id } { details-airlinename }| TO r_output.
     APPEND |Connection:  { connection_id   }|                    TO r_output.
     APPEND |Departure:   { details-departureairport     }|       TO r_output.

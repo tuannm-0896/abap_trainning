@@ -43,8 +43,8 @@ CLASS ltcl_test IMPLEMENTATION.
     " Bước 3: COMMIT để kích hoạt logic validate
     COMMIT ENTITIES
       RESPONSE OF ZR_01ACONN_NMT
-      FAILED failed
-      REPORTED reported.
+      FAILED DATA(failed_late)
+      REPORTED DATA(reported_late).
 
     " Bước 4: Kiểm tra kết quả
     " Kiểm tra failed-Flight_NMT: phải có 1 bản ghi thất bại
@@ -97,8 +97,8 @@ CLASS ltcl_test IMPLEMENTATION.
     " Bước 3: COMMIT để kích hoạt logic validate
     COMMIT ENTITIES
       RESPONSE OF ZR_01ACONN_NMT
-      FAILED failed
-      REPORTED reported.
+      FAILED DATA(failed_late)
+      REPORTED DATA(reported_late).
 
     " Bước 4: Kiểm tra kết quả
     " Kiểm tra failed-Flight_NMT: phải rỗng

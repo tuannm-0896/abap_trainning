@@ -35,7 +35,7 @@ CLASS zcl_local_class_nmt IMPLEMENTATION.
      TRY.
        var_char = EXACT #( var_string ).
      CATCH cx_sy_conversion_error.
-       out->write( 'String has to be truncated. EXACT triggered an exception' ).
+       out->write( | {  'String has to be truncated. EXACT triggered an exception'(001) } | ).
      ENDTRY.
 
      var_date = 'ABCDEFGH'.

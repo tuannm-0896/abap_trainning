@@ -14,48 +14,40 @@ ENDCLASS.
 
 CLASS zcl_local_class_nmt IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
-      DATA var_date   TYPE d.
-      DATA var_pack   TYPE p LENGTH 3 DECIMALS 2.
-      DATA var_string TYPE string.
-      DATA var_char   TYPE c LENGTH 3.
+      DATA text TYPE string      VALUE ` SAP BTP,   ABAP Environment  `.
 
-     var_pack = 1 / 8.
-     out->write( |1/8 = { var_pack NUMBER = USER }| ).
-
-     TRY.
-       var_pack = EXACT #( 1 / 8 ).
-     CATCH cx_sy_conversion_error.
-       out->write( |1/8 has to be rounded. EXACT triggered an exception| ).
-     ENDTRY.
-
-     var_string = 'ABCDE'.
-     var_char   = var_string.
-     out->write( var_char ).
-
-     TRY.
-       var_char = EXACT #( var_string ).
-     CATCH cx_sy_conversion_error.
-       out->write( | {  'String has to be truncated. EXACT triggered an exception'(001) } | ).
-     ENDTRY.
-
-     var_date = 'ABCDEFGH'.
-     out->write( var_Date ).
-
-     TRY.
-       var_date = EXACT #( 'ABCDEFGH' ).
-     CATCH cx_sy_conversion_error.
-       out->write( |ABCDEFGH is not a valid date. EXACT triggered an exception| ).
-     ENDTRY.
+* Change Case of characters
+**********************************************************************
+    out->write( |TO_UPPER         = {   to_upper(  text ) } | ).
+    out->write( |TO_LOWER         = {   to_lower(  text ) } | ).
+    out->write( |TO_MIXED         = {   to_mixed(  text ) } | ).
+    out->write( |FROM_MIXED       = { from_mixed(  text ) } | ).
 
 
-    var_date = '20221232'.
-    out->write( var_date ).
+* Change order of characters
+**********************************************************************
+    out->write( |REVERSE             = {  reverse( text ) } | ).
+    out->write( |SHIFT_LEFT  (places)= {  shift_left(  val = text places   = 3  ) } | ).
+    out->write( |SHIFT_RIGHT (places)= {  shift_right( val = text places   = 3  ) } | ).
+    out->write( |SHIFT_LEFT  (circ)  = {  shift_left(  val = text circular = 3  ) } | ).
+    out->write( |SHIFT_RIGHT (circ)  = {  shift_right( val = text circular = 3  ) } | ).
 
 
-    TRY.
-        var_date = EXACT #( '20221232' ).
-    CATCH cx_sy_conversion_error.
-        out->write( |2022-12-32 is not a valid date. EXACT triggered an exception| ).
-    ENDTRY.
+* Extract a Substring
+**********************************************************************
+    out->write( |SUBSTRING       = {  substring(        val = text off = 4 len = 10 ) } | ).
+    out->write( |SUBSTRING_FROM  = {  substring_from(   val = text sub = 'ABAP'     ) } | ).
+    out->write( |SUBSTRING_AFTER = {  substring_after(  val = text sub = 'ABAP'     ) } | ).
+    out->write( |SUBSTRING_TO    = {  substring_to(     val = text sub = 'ABAP'     ) } | ).
+    out->write( |SUBSTRING_BEFORE= {  substring_before( val = text sub = 'ABAP'     ) } | ).
+
+
+* Condense, REPEAT and Segment
+**********************************************************************
+    out->write( |CONDENSE         = {   condense( val = text ) } | ).
+    out->write( |REPEAT           = {   repeat(   val = text occ = 2 ) } | ).
+
+    out->write( |SEGMENT1         = {   segment(  val = text sep = ',' index = 1 ) } |  ).
+    out->write( |SEGMENT2         = {   segment(  val = text sep = ',' index = 2 ) } |  ).
   ENDMETHOD.
 ENDCLASS.

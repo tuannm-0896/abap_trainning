@@ -14,29 +14,47 @@ ENDCLASS.
 
 CLASS zcl_local_class_nmt IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
-    SELECT FROM /dmo/Agency AS a
-            INNER JOIN /dmo/customer AS c
-*       LEFT OUTER JOIN /dmo/customer AS c
-*      RIGHT OUTER JOIN /dmo/customer AS c
-         ON a~city         = c~city
 
-     FIELDS agency_id,
-            name AS Agency_name,
-            a~city AS agency_city,
-            c~city AS customer_city,
-            customer_id,
-            last_name AS customer_name
+    SELECT FROM /dmo/customer
+         FIELDS customer_id,
+                title,
+                CASE title
+                  WHEN 'Mr.'  THEN 'Mister'
+                  WHEN 'Mrs.' THEN 'Misses'
+                  ELSE             ' '
+               END AS title_long
 
-      WHERE ( c~customer_id < '000010' OR c~customer_id IS NULL )
-        AND ( a~agency_id   < '070010' OR a~agency_id   IS NULL )
-
-       INTO TABLE @DATA(result_Join).
-
+        WHERE country_code = 'AT'
+         INTO TABLE @DATA(result_simple).
 
     out->write(
       EXPORTING
-        data   = result_join
-        name   = 'RESULT_JOIN'
+        data   = result_simple
+        name   = 'RESULT_SIMPLE'
     ).
+
+**********************************************************************
+
+    SELECT FROM /DMO/flight
+         FIELDS flight_date,
+                seats_max,
+                seats_occupied,
+                CASE
+                  WHEN seats_occupied < seats_max THEN 'Seats Avaliable'
+                  WHEN seats_occupied = seats_max THEN 'Fully Booked'
+                  WHEN seats_occupied > seats_max THEN 'Overbooked!'
+                  ELSE                                 'This is impossible'
+                END AS Booking_State
+
+          WHERE carrier_id    = 'LH'
+            AND connection_id = '0400'
+           INTO TABLE @DATA(result_complex).
+
+    out->write(
+      EXPORTING
+        data   = result_complex
+        name   = 'RESULT_COMPLEX'
+    ).
+
   ENDMETHOD.
 ENDCLASS.

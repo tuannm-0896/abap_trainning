@@ -14,40 +14,29 @@ ENDCLASS.
 
 CLASS zcl_local_class_nmt IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
-      DATA text TYPE string      VALUE ` SAP BTP,   ABAP Environment  `.
+    SELECT FROM /dmo/Agency AS a
+            INNER JOIN /dmo/customer AS c
+*       LEFT OUTER JOIN /dmo/customer AS c
+*      RIGHT OUTER JOIN /dmo/customer AS c
+         ON a~city         = c~city
 
-* Change Case of characters
-**********************************************************************
-    out->write( |TO_UPPER         = {   to_upper(  text ) } | ).
-    out->write( |TO_LOWER         = {   to_lower(  text ) } | ).
-    out->write( |TO_MIXED         = {   to_mixed(  text ) } | ).
-    out->write( |FROM_MIXED       = { from_mixed(  text ) } | ).
+     FIELDS agency_id,
+            name AS Agency_name,
+            a~city AS agency_city,
+            c~city AS customer_city,
+            customer_id,
+            last_name AS customer_name
 
+      WHERE ( c~customer_id < '000010' OR c~customer_id IS NULL )
+        AND ( a~agency_id   < '070010' OR a~agency_id   IS NULL )
 
-* Change order of characters
-**********************************************************************
-    out->write( |REVERSE             = {  reverse( text ) } | ).
-    out->write( |SHIFT_LEFT  (places)= {  shift_left(  val = text places   = 3  ) } | ).
-    out->write( |SHIFT_RIGHT (places)= {  shift_right( val = text places   = 3  ) } | ).
-    out->write( |SHIFT_LEFT  (circ)  = {  shift_left(  val = text circular = 3  ) } | ).
-    out->write( |SHIFT_RIGHT (circ)  = {  shift_right( val = text circular = 3  ) } | ).
-
-
-* Extract a Substring
-**********************************************************************
-    out->write( |SUBSTRING       = {  substring(        val = text off = 4 len = 10 ) } | ).
-    out->write( |SUBSTRING_FROM  = {  substring_from(   val = text sub = 'ABAP'     ) } | ).
-    out->write( |SUBSTRING_AFTER = {  substring_after(  val = text sub = 'ABAP'     ) } | ).
-    out->write( |SUBSTRING_TO    = {  substring_to(     val = text sub = 'ABAP'     ) } | ).
-    out->write( |SUBSTRING_BEFORE= {  substring_before( val = text sub = 'ABAP'     ) } | ).
+       INTO TABLE @DATA(result_Join).
 
 
-* Condense, REPEAT and Segment
-**********************************************************************
-    out->write( |CONDENSE         = {   condense( val = text ) } | ).
-    out->write( |REPEAT           = {   repeat(   val = text occ = 2 ) } | ).
-
-    out->write( |SEGMENT1         = {   segment(  val = text sep = ',' index = 1 ) } |  ).
-    out->write( |SEGMENT2         = {   segment(  val = text sep = ',' index = 2 ) } |  ).
+    out->write(
+      EXPORTING
+        data   = result_join
+        name   = 'RESULT_JOIN'
+    ).
   ENDMETHOD.
 ENDCLASS.
